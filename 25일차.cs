@@ -10,19 +10,21 @@ namespace _20250806
     {
         static void Main()
         {
-            int x = 10;
-            int y = 20;
-            Swap(ref x, ref y);
+            //int x = 10;
+            //int y = 20;
+            //Swap(ref x, ref y);
 
-            Console.WriteLine(x);
-            Console.WriteLine(y);
+            //Console.WriteLine(x);
+            //Console.WriteLine(y);
 
-            Console.WriteLine(solution(580010));
+            //Console.WriteLine(solution(580010));
 
-            int[] arr = new int[] { 13, 15, 1, 50, 99 };
-            MinMax(arr);
+            //int[] arr = new int[] { 13, 15, 1, 50, 99 };
+            //MinMax(arr);
 
-            CountingStar(Console.ReadLine());
+            //CountingStar(Console.ReadLine());
+            //Swap();
+            Add(1, 1);
         }
         static void Swap(ref int x, ref int y)
         {
@@ -99,6 +101,44 @@ namespace _20250806
             }
 
             return str;
+        }
+        static void Swap()
+        {
+            int[,] arr = new int[,]
+            {
+                {1,2,3 },
+                {4,5,6 },
+                {7,8,9 },
+            };
+           
+            for(int i = 0; i < arr.GetLength(0); i++)
+            {
+                for(int j=0; j<arr.GetLength(1); j++)
+                {
+                    Console.Write(arr[j,i]);
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void Add(int y, int x)
+        {
+            int[] dy = { -1, 0, 1, 0 };
+            int[] dx = { 0, 1, 0, -1 };
+            int[,] map =
+            {
+                {1,1,1 },
+                {1,1,1 },
+                {1,1,1 }
+            };
+            for (int i = 0;i<4; i++)
+            {
+                int ny = y + dy[i];
+                int nx = x + dx[i];
+                if (ny < 0 || ny >= map.GetLength(0) || nx < 0 || nx >= map.GetLength(1))
+                    continue;
+                map[ny, nx]++;
+            }
         }
     }
 }
