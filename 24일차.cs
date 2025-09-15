@@ -65,7 +65,7 @@ namespace _20250806
 
             for(int i=0; i< temp.Length; i++)
             {
-                temp[i] = arr[i < index ? i : i+1];
+                temp[i] = arr[i < index ? index : i+1];
             }
             arr = temp;
             count--;
