@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BinarySearchTree;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -86,6 +87,114 @@ namespace _20250806
         {
             Graph graph = new Graph();
             graph.Dijkstra(0);
+
+            var bst = new BinarySearchTree.BinarySearchTree();
+
+            int[] items = { 3,5,4,2,1,9,7,6,0 };
+            
+            foreach(int item in items)
+            {
+                bst.Insert(item);
+            }
+
+            var findNow = bst.Find(6);
+
+            Console.WriteLine($" 본노드 : {findNow.key} 좌노드 : {findNow.left}, 우노드 : {findNow.right} ");
         }
+    }
+    
+}
+namespace BinarySearchTree
+{
+    class BSTNode
+    {
+        public int key;
+        public BSTNode left;
+        public BSTNode right;
+
+        public BSTNode(int key)
+        {
+            this.key = key;
+        }
+    }
+
+    class BinarySearchTree
+    {
+        private BSTNode _root;
+        // Insert 까지 구현
+        public void Insert(int key)
+        {
+            _root = InsertRec(_root, key);
+        }
+        private BSTNode InsertRec(BSTNode node, int key)
+        {
+            if (node == null)
+                return new BSTNode(key);
+
+            if (key < node.key)
+                node.left = InsertRec(node.left, key);
+
+            if (key > node.key)
+                node.right = InsertRec(node.right, key);
+
+            return node;
+        }
+        public BSTNode Find(int key)
+        {
+            var now = _root;
+            while (now != null)
+            {
+                if (key == now.key)
+                    return now;
+
+                now = (key < now.key) ? now.left : now.right;
+            }
+            return null;
+        }
+        public void Remove(int key)
+        {
+            _root = RemoveRec(_root, key);
+        }
+        private BSTNode RemoveRec(BSTNode node, int key)
+        {
+            // 삭제하려는 노드가 널일 때
+            if (node == null)
+                return null;
+            // 삭제하려는 키가 현재 노드보다 작다면
+            if (key < node.key)
+            {
+                node.left = RemoveRec(node.left, key);
+            }
+            // 삭제하려는 키가 현재 노드보다 크다면
+            else if (key > node.key)
+            {
+                node.right = RemoveRec(node.right, key);
+            }
+            else
+            {
+                // 해당 노드가 리프일 때
+                if (node.left == null && node.right == null)
+                    return null;
+
+                // 해당 노드의 자식이 한 개일 때
+                if (node.left == null)
+                    return node.right;
+                if (node.right == null)
+                    return node.left;
+
+                BSTNode min = FindMin(node.right);
+                node.key = min.key;
+                node.right = RemoveRec(node.right, min.key);
+            }
+            return node;
+        }
+        private BSTNode FindMin(BSTNode node)
+        {
+            while (node.left != null)
+                node = node.left;
+
+            return node;
+        }
+
     }
 }
