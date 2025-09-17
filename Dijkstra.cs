@@ -1,4 +1,5 @@
 ﻿using BinarySearchTree;
+using PriorityQueue_우선순위큐;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -100,6 +101,19 @@ namespace _20250806
             var findNow = bst.Find(6);
 
             Console.WriteLine($" 본노드 : {findNow.key} 좌노드 : {findNow.left}, 우노드 : {findNow.right} ");
+
+            PriorityQueue<Knight> q = new PriorityQueue<Knight>();
+            q.Push(new Knight() { id = 20});
+            q.Push(new Knight() { id = 10 });
+            q.Push(new Knight() { id = 30 });
+            q.Push(new Knight() { id = 90 });
+            q.Push(new Knight() { id = 40 });
+
+            while (q.Count() > 0)
+            {
+                Console.WriteLine(q.Pop().id);
+            }
+
         }
     }
     
@@ -151,6 +165,18 @@ namespace BinarySearchTree
             }
             return null;
         }
+        public bool Contains(int key)
+        {
+            var now = _root;
+            while (now != null)
+            {
+                if (key == now.key)
+                    return true;
+
+                now = (key < now.key) ? now.left : now.right;
+            }
+            return false;
+        }
         public void Remove(int key)
         {
             _root = RemoveRec(_root, key);
@@ -196,5 +222,100 @@ namespace BinarySearchTree
             return node;
         }
 
+    }
+}
+
+// 자기 균형 이진 탐색 트리(self Balancing BST)
+// AVL(DB) -> Red Black Tree
+// AVL => 빡세게 균형잡는것
+// RedBlack tree : 자기 균형 이진 탐색 트리
+// 아이디어 : 빨강 또는 검정 이라는 색이라는 개념을 도입하여 규칙을 생성함
+// - 모든 노드는 빨강 또는 검정이다.
+// - 루트는 항상 검정이다.
+// - 모든 리프(NIL 노드)는 검정이다.
+// - NIL은 NULL
+// - 빨간 노드의 자식은 항상 검정이다.
+// - 루트에서 어떤 리프까지 가는 모든 경로에 있는 검정 노드 개수는 동일하다.
+
+// 힙트리 - 힙정렬 - 우선순위큐 - 에이스타
+namespace PriorityQueue_우선순위큐
+{
+    class PriorityQueue<T> where T : IComparable<T> 
+    {
+        List<T> _heap =  new List<T>();
+
+        public void Push(T data)
+        {
+            _heap.Add(data);
+
+            int now = _heap.Count - 1;
+            while(now > 0)
+            {
+                int next = (now - 1) / 2;
+
+                if (_heap[now].CompareTo(_heap[next]) < 0 )
+                    break;
+
+                T temp = _heap[now];
+                _heap[now] = _heap[next];
+                _heap[next] = temp;
+
+                now = next;
+            }
+
+        }
+        public T Pop()
+        {
+            T ret = _heap[0];
+
+            int lastIndex = _heap.Count - 1;
+            _heap[0] = _heap[lastIndex];
+            _heap.RemoveAt(lastIndex);
+            lastIndex--;
+
+            int now = 0;
+            while (true)
+            {
+                int left = 2 * now + 1;
+                int right = 2 * now + 2;
+
+                int next = now;
+
+                if (left <= lastIndex && _heap[next].CompareTo(_heap[left]) < 0)
+                    next = left; 
+
+                if(right <=lastIndex && _heap[next].CompareTo(_heap[right]) < 0)
+                    next = right;
+
+                if (next == now)
+                    break;
+
+                T temp = _heap[now];
+                _heap[now] = _heap[next];
+                _heap[next] = temp;
+
+                now = next;
+            }
+
+            return ret;
+
+        }
+        public int Count()
+        {
+            return _heap.Count;
+        }
+
+    }
+    class Knight : IComparable<Knight>
+    {
+        public int id { get; set; }
+
+        public int CompareTo(Knight? other)
+        {
+            if (id == other.id)
+                return 0;
+
+            return id > other.id ? 1 : -1;
+        }
     }
 }
